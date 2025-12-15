@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Smart Study Planner | AI-Like Scheduler</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="logo">
+                <i class="fas fa-brain"></i>
+                <span>Smart Study Planner</span>
+            </div>
+            <div class="nav-buttons">
+                <button id="themeToggle" class="btn-icon" title="Toggle Theme">
+                    <i class="fas fa-moon"></i>
+                </button>
+                <button id="exportBtn" class="btn-secondary">Export</button>
+                <button id="resetBtn" class="btn-danger">Reset</button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Container -->
+    <div class="container">
+        <!-- Left Sidebar - Input Form -->
+        <aside class="sidebar">
+            <div class="form-container">
+                <h2><i class="fas fa-cog"></i> Planning Setup</h2>
+                
+                <!-- Basic Settings -->
+                <div class="form-section">
+                    <h3>📅 Timeline</h3>
+                    <div class="form-group">
+                        <label for="startDate">Start Date</label>
+                        <input type="date" id="startDate" value="2024-01-01">
+                    </div>
+                    <div class="form-group">
+                        <label for="endDate">End Date</label>
+                        <input type="date" id="endDate" value="2024-01-30">
+                    </div>
+                    <div class="form-group">
+                        <label for="dailyHours">Daily Study Hours</label>
+                        <input type="range" id="dailyHours" min="2" max="12" value="6">
+                        <span id="hoursValue">6 hours</span>
+                    </div>
+                </div>
+
+                <!-- Session Settings -->
+                <div class="form-section">
+                    <h3>⏱️ Session Settings</h3>
+                    <div class="form-group">
+                        <label for="sessionLength">Session Length (minutes)</label>
+                        <select id="sessionLength">
+                            <option value="25">25 min (Pomodoro)</option>
+                            <option value="45" selected>45 min (Standard)</option>
+                            <option value="60">60 min (Deep Focus)</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="breakDuration">Break Duration (minutes)</label>
+                        <select id="breakDuration">
+                            <option value="5">5 min</option>
+                            <option value="10" selected>10 min</option>
+                            <option value="15">15 min</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- Subjects Input -->
+                <div class="form-section">
+                    <h3>📚 Subjects Management</h3>
+                    <div id="subjectsContainer">
+                        <div class="subject-input">
+                            <input type="text" placeholder="Subject Name" class="subject-name" value="Data Structures">
+                            <select class="subject-priority">
+                                <option value="high" selected>High</option>
+                                <option value="medium">Medium</option>
+                                <option value="low">Low</option>
+                            </select>
+                            <select class="subject-difficulty">
+                                <option value="easy">Easy</option>
+                                <option value="medium">Medium</option>
+                                <option value="hard" selected>Hard</option>
+                            </select>
+                            <input type="number" placeholder="Hours" class="subject-hours" min="1" max="100" value="30">
+                            <button class="btn-remove-subject"><i class="fas fa-times"></i></button>
+                        </div>
+                        <div class="subject-input">
+                            <input type="text" placeholder="Subject Name" class="subject-name" value="Algorithms">
+                            <select class="subject-priority">
+                                <option value="high" selected>High</option>
+                                <option value="medium">Medium</option>
+                                <option value="low">Low</option>
+                            </select>
+                            <select class="subject-difficulty">
+                                <option value="easy">Easy</option>
+                                <option value="medium" selected>Medium</option>
+                                <option value="hard">Hard</option>
+                            </select>
+                            <input type="number" placeholder="Hours" class="subject-hours" min="1" max="100" value="25">
+                            <button class="btn-remove-subject"><i class="fas fa-times"></i></button>
+                        </div>
+                        <div class="subject-input">
+                            <input type="text" placeholder="Subject Name" class="subject-name" value="Database Systems">
+                            <select class="subject-priority">
+                                <option value="high">High</option>
+                                <option value="medium" selected>Medium</option>
+                                <option value="low">Low</option>
+                            </select>
+                            <select class="subject-difficulty">
+                                <option value="easy">Easy</option>
+                                <option value="medium" selected>Medium</option>
+                                <option value="hard">Hard</option>
+                            </select>
+                            <input type="number" placeholder="Hours" class="subject-hours" min="1" max="100" value="20">
+                            <button class="btn-remove-subject"><i class="fas fa-times"></i></button>
+                        </div>
+                    </div>
+                    <button id="addSubjectBtn" class="btn-primary">
+                        <i class="fas fa-plus"></i> Add Subject
+                    </button>
+                </div>
+
+                <!-- Generate Button -->
+                <button id="generatePlanBtn" class="btn-primary btn-generate">
+                    <i class="fas fa-magic"></i> Generate Smart Plan
+                </button>
+            </div>
+        </aside>
+
+        <!-- Main Content Area -->
+        <main class="main-content">
+            <!-- Dashboard -->
+            <div class="dashboard">
+                <div class="stats-card">
+                    <i class="fas fa-calendar-alt"></i>
+                    <div>
+                        <h3 id="totalDays">30</h3>
+                        <p>Total Days</p>
+                    </div>
+                </div>
+                <div class="stats-card">
+                    <i class="fas fa-book"></i>
+                    <div>
+                        <h3 id="totalSubjects">3</h3>
+                        <p>Subjects</p>
+                    </div>
+                </div>
+                <div class="stats-card">
+                    <i class="fas fa-clock"></i>
+                    <div>
+                        <h3 id="totalHours">75</h3>
+                        <p>Study Hours</p>
+                    </div>
+                </div>
+                <div class="stats-card">
+                    <i class="fas fa-chart-line"></i>
+                    <div>
+                        <h3 id="completionRate">0%</h3>
+                        <p>Completion</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Smart Suggestions -->
+            <div class="suggestions-panel">
+                <h3><i class="fas fa-lightbulb"></i> Smart Suggestions</h3>
+                <div id="suggestionsList">
+                    <p class="suggestion">Add your subjects and generate a smart study plan!</p>
+                </div>
+            </div>
+
+            <!-- Timetable Navigation -->
+            <div class="timetable-header">
+                <div>
+                    <h2><i class="fas fa-calendar-day"></i> Daily Schedule</h2>
+                    <p id="currentDate">Day 1: January 1, 2024</p>
+                </div>
+                <div class="day-navigation">
+                    <button id="prevDayBtn" class="btn-icon" disabled><i class="fas fa-chevron-left"></i></button>
+                    <span id="dayCounter">Day 1/30</span>
+                    <button id="nextDayBtn" class="btn-icon"><i class="fas fa-chevron-right"></i></button>
+                </div>
+                <div class="efficiency-display">
+                    <span class="efficiency-badge" id="efficiencyScore">--</span>
+                    <small>Efficiency Score</small>
+                </div>
+            </div>
+
+            <!-- Timetable Display -->
+            <div class="timetable-container">
+                <div class="time-slot-header">
+                    <div class="time-col">Time</div>
+                    <div class="subject-col">Subject</div>
+                    <div class="priority-col">Priority</div>
+                    <div class="type-col">Type</div>
+                    <div class="status-col">Status</div>
+                    <div class="action-col">Action</div>
+                </div>
+                <div id="timetableSlots">
+                    <!-- Timetable slots will be generated here -->
+                    <div class="empty-state">
+                        <i class="fas fa-calendar-plus"></i>
+                        <h3>No Schedule Generated</h3>
+                        <p>Click "Generate Smart Plan" to create your personalized study schedule</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Progress Tracking -->
+            <div class="progress-section">
+                <h3><i class="fas fa-chart-bar"></i> Subject Progress</h3>
+                <div id="progressBars">
+                    <!-- Progress bars will be generated here -->
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Export Modal -->
+    <div id="exportModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3><i class="fas fa-download"></i> Export Study Plan</h3>
+                <button class="btn-icon btn-close-modal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="export-options">
+                    <button class="export-option" data-format="json">
+                        <i class="fas fa-code"></i>
+                        <span>JSON Format</span>
+                        <small>For backup & import</small>
+                    </button>
+                    <button class="export-option" data-format="csv">
+                        <i class="fas fa-file-csv"></i>
+                        <span>CSV Format</span>
+                        <small>For spreadsheets</small>
+                    </button>
+                    <button class="export-option" data-format="text">
+                        <i class="fas fa-file-alt"></i>
+                        <span>Text Format</span>
+                        <small>Printable version</small>
+                    </button>
+                </div>
+                <div class="export-preview">
+                    <h4>Preview:</h4>
+                    <pre id="exportPreview"></pre>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button id="copyExportBtn" class="btn-secondary">Copy to Clipboard</button>
+                <button id="downloadExportBtn" class="btn-primary">Download File</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- JavaScript Files -->
+    <script type="module" src="main.js"></script>
+</body>
+</html>
